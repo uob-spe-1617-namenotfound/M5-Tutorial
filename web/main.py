@@ -1,6 +1,6 @@
-import datetime
 import logging
 
+import requests
 from flask import Flask, url_for, redirect, render_template
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
@@ -24,15 +24,19 @@ class MessageForm(FlaskForm):
 @app.route('/', methods=['GET', 'POST'])
 def show_index():
     # List containing the previous messages (should be retrieved from API later).
-    messages = [{
-        "author": "Anonymous",
-        "message": "I'm an anonymous legionary",
-        "timestamp": str(datetime.datetime.now())
-    }]
+    r = requests.get("http://api:5000/messages")
+    data = r.json()
+    messages = data['data']
     form = MessageForm()
     if form.validate_on_submit():
         # Log the received message (should be processed by the API later).
         app.logger.info("Received message '{}' from '{}'".format(form.message.data, form.name.data))
+        r = requests.post('http://api:5000/send', json={
+            "author": form.name.data,
+            "message": form.message.data
+        })
+        data = r.json()
+        app.logger.info("Received following response from the API: {}".format(data))
         # If the message is successfully received, redirect the user to the GET version of the page
         # to prevent them from sending the message again when refreshing.
         return redirect(url_for('show_index'))
