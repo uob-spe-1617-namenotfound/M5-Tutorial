@@ -1,0 +1,25 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}
+    Shout it out!
+{% endblock %}
+{% block content %}
+    <h1>Shout it out!</h1>
+    <h2>Send a message</h2>
+    {{ wtf.quick_form(form) }}
+    <h2>Past messages</h2>
+    <table class="table table-striped">
+        <tr>
+            <th>Time</th>
+            <th>Author</th>
+            <th>Message</th>
+        </tr>
+        {% for msg in messages %}
+            <tr>
+                <td>{{ msg.timestamp }}</td>
+                <td>{{ msg.author }}</td>
+                <td>{{ msg.message }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
