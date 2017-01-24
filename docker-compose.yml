@@ -7,4 +7,12 @@ services:
             - "15000:5000"
         volumes:
             - ./web:/code
+    api:
+        build: ./api
+        command: python -u main.py
+        ports:
+            - "15001:5000"
+        volumes:
+            - ./api:/code
+
 
