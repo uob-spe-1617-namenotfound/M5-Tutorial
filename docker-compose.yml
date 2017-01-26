@@ -16,6 +16,8 @@ services:
             - "5000"
         volumes:
             - ./api:/code
+        links:
+            - db
     db:
         image: mongo:3.4
         command: --smallfiles --rest
